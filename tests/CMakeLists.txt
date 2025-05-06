@@ -1,0 +1,20 @@
+find_package(Boost REQUIRED)
+
+if(UNIX)
+    # Add unit tests for serial
+    ament_add_gtest(${PROJECT_NAME}-test unix_serial_tests.cc)
+    if(TARGET ${PROJECT_NAME}-test)
+        target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} Boost::boost)
+        if(NOT APPLE)
+            target_link_libraries(${PROJECT_NAME}-test util)
+        endif()
+    endif()
+
+    # Add timer tests (except for macOS)
+    if(NOT APPLE)
+        ament_add_gtest(${PROJECT_NAME}-test-timer unit/unix_timer_tests.cc)
+        if(TARGET ${PROJECT_NAME}-test-timer)
+            target_link_libraries(${PROJECT_NAME}-test-timer ${PROJECT_NAME})
+        endif()
+    endif()
+endif()
